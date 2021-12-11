@@ -1,0 +1,24 @@
+AuxiliarySoftware       Install R Commander Auxiliary Software
+CFA                     Rcmdr Confirmatory Factor Analysis Dialog
+Commander               R Commander
+Commander-es            R Commander
+Compute                 Rcmdr Compute Dialog
+Plugins                 R Commander Plug-in Packages
+Rcmdr-internal          'tcltk' Functions Re-exported by the 'Rcmdr'
+                        Package.
+Rcmdr-package           R Commander
+Rcmdr.Utilities         Rcmdr Utility Functions
+RcmdrPager              Pager for Text Files
+RecodeDialog            Rcmdr Recode Dialog
+RepeatedMeasuresDialogs
+                        R Commander Repeated-Measures ANOVA/ANCOVA
+                        Dialogs
+ReshapeDatasetDialogs   R Commander Reshape Data Set Dialogs
+Scatter3DDialog         Rcmdr 3D Scatterplot Dialog
+ScriptEditor            R Commander Script Editor
+editDataset             R Commander Dataset Editor
+generalizedLinearModel
+                        Rcmdr Generalized Linear Model Dialog
+hierarchicalCluster     Rcmdr Hierarchical Clustering Dialog
+linearModel             Rcmdr Linear Model Dialog
+saveOptions             Save R Commander Options in an R Profile File
