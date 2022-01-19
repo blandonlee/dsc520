@@ -1,0 +1,98 @@
+---
+title: "Week6/Assignment04"
+author: "Blandon Lee"
+date: "1/18/2022"
+output: 
+   html_document: default
+   word_document: default
+   pdf_document: default
+
+bibliography: bibliography.bib
+---
+
+# Markdown Basics
+
+## Favorite Foods
+
+1.Pizza
+2.BBQ
+3.Tacos
+
+## Images
+![All Cases (Log Plot)]("C:\Users\bland\Documents\10-all-cases-log.png")
+
+## Add a Quote
+>Do not try to make circumstances fit your plans. Make plans that fit the circumstances.
+- General George Patton
+
+## Add an Equation
+$ f(k) = {n\choose k} p^{k} (1-p)^{n-k} $
+
+## Add a Footnote
+^[This is a Footnote]
+
+## Add Citations
+* R for Everyone [@lander2014r]
+* Discovering Statistics Using R [@field2012discovering]
+
+# Inline Code
+```{r include=FALSE}
+library(ggplot2)
+theme_set(theme_minimal())
+setwd('C:/Users/bland/Documents/GitHub/dsc520')
+heights_df <- read.csv("C:/Users/bland/Documents/GitHub/dsc520/data/r4ds/heights.csv")
+covid_df <- read.csv("data/nytimes/covid-19-data/us-states.csv")
+covid_df$date <- as.Date(covid_df$date)
+california_df <- covid_df[ which( covid_df$state == "California"), ]
+ny_df <- covid_df[ which(covid_df$state == "New York"), ]
+florida_df <- covid_df[ which(covid_df$state == "Florida"), ]
+```
+
+## NY Times COVID-19 Data
+```{r echo=FALSE}
+ggplot(data=florida_df, aes(x=date, group=1)) +
+  geom_line(aes(y = cases, colour = "Florida")) +
+  geom_line(data=ny_df, aes(y = cases,colour="New York")) +
+  geom_line(data=california_df, aes(y = cases, colour="California")) +
+  scale_colour_manual("",
+                      breaks = c("Florida", "New York", "California"),
+                      values = c("darkred", "darkgreen", "steelblue")) +
+  xlab(" ") + ylab("Cases") + scale_y_log10()
+
+```
+
+
+## R4DS Height vs Earnings
+```{r echo=FALSE}
+ggplot(heights_df, aes(x=height, y=earn, col=sex)) + geom_point() + ggtitle('Height VS. Earnings') + xlab('Height(Inches)') + ylab('Earnings(Dollars)')
+```
+
+# Tables
+
+## Knitr Table with Kable
+```{r echo=FALSE}
+library(knitr)
+setwd("C:/Users/bland/Documents/GitHub/dsc520")
+name <- c("Aragon", "Bilbo", "Frodo", "Galadriel", "Sam", "Gandalf", "Legolas", "Sauron", "Gollum")
+race <- c("Men", "Hobbit", "Hobbit", "Elf", "Hobbit", "Maia", "Elf", "Maia", "Hobbit")
+in_fellowship <- c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE, FALSE)
+ring_bearer <- c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+age <- c(88, 129, 51, 7000, 36, 2019, 2931, 7052, 589)
+characters_df <- data.frame(name, race, in_fellowship, ring_bearer, age)
+kable(characters_df, "simple", caption="One Ring to Rule Them All")
+```
+
+## Pandoc Table
+name <- c("Aragon", "Bilbo", "Frodo", "Galadriel", "Sam", "Gandalf", "Legolas", "Sauron", "Gollum")
+race <- c("Men", "Hobbit", "Hobbit", "Elf", "Hobbit", "Maia", "Elf", "Maia", "Hobbit")
+in_fellowship <- c(TRUE, FALSE, TRUE, FALSE, TRUE, TRUE, TRUE, FALSE, FALSE)
+ring_bearer <- c(FALSE, TRUE, TRUE, FALSE, TRUE, TRUE, FALSE, TRUE, TRUE)
+age <- c(88, 129, 51, 7000, 36, 2019, 2931, 7052, 589)
+
+characters_df <- data.frame(name, race, in_fellowship, ring_bearer, age)
+
+pandoc.table(characters_df, style = 'grid')
+
+# References
+
+
