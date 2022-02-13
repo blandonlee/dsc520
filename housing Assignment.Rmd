@@ -1,0 +1,202 @@
+---
+title: "housing"
+author: "Blandon Lee"
+date: "2/7/2022"
+output: html_document
+---
+
+What I cleaned from the data set is the variables. They were in differing formats that made it difficult to use.
+
+```{r}
+library(readxl)
+housing <- read_excel("C:/Users/bland/Desktop/DSC 520/Data/housing.xlsx")
+View(housing)
+```
+```{r}
+names(housing) <- make.names(names(housing))
+```
+```{r}
+summary(housing)
+```
+
+I chose to use the predictors LivingSgft, Bedrooms, and FullBaths because I felt that this information is desired by most people buying homes.They are also important for sales because it is a measuring stick for a home's value on the market.  Everyone needs these answers prior to a purchase or sale to ensure the home works for the buyer and is priced accordingly.
+
+```{r}
+price_lot <- data.frame(housing$SalePrice, housing$LotSqft)
+price_lot
+
+# Created Variable
+
+summary(price_lot)
+```
+```{r}
+price_sqft_bed_bath <- data.frame(housing$SalePrice, housing$LivingSqft, housing$Bedrooms, housing$FullBaths)
+price_sqft_bed_bath
+
+# Created Variable
+
+summary(price_sqft_bed_bath)
+```
+
+When I ran the summary function on SalePrice/LotSqft I got a multiple R-squared: 0.01435 and adjusted R-squared:  0.01428. When I ran the summary function on  SalePrice/LivingSqft/FullBaths/Bedrooms I got a multiple R-squared:  0.212,	adjusted R-squared:  0.2118. 
+
+With a decrease in adjusted R-squared is shows that it does not improve the model fit. With additions to the dataset the effect seems to be the same.
+
+```{r}
+RegModel.2 <- lm(housing.SalePrice~housing.LotSqft, data=price_lot)
+
+# R-squared / Adjusted R-squared
+
+summary(RegModel.2)
+```
+```{r}
+LinearModel.3 <- lm(housing.SalePrice ~ housing.LivingSqft + 
+  housing.FullBaths + housing.Bedrooms, data=price_sqft_bed_bath)
+
+# R-squared / Adjusted R-squared
+
+summary(LinearModel.3)
+```
+
+There is a 99% probability that the mean will fall within lower bound and upper bound intervals. With the mean falling between the lower and upper bounds in all the examples I am confident that 99% of the samples contain true parameters.
+
+```{r}
+with(price_lot, (t.test(housing.SalePrice, housing.LotSqft, 
+  alternative='two.sided', conf.level=.99, paired=TRUE)))
+
+# Calculate the confidence intervals 
+```
+```{r}
+with(price_sqft_bed_bath, (t.test(housing.SalePrice, housing.Bedrooms, 
+  alternative='two.sided', conf.level=.99, paired=TRUE)))
+
+with(price_sqft_bed_bath, (t.test(housing.SalePrice, housing.FullBaths, 
+  alternative='two.sided', conf.level=.99, paired=TRUE)))
+
+with(price_sqft_bed_bath, (t.test(housing.SalePrice, housing.LivingSqft, 
+  alternative='two.sided', conf.level=.99, paired=TRUE)))
+
+# Calculate the confidence intervals
+```
+
+
+
+```{r}
+original <- aov(SalePrice ~ LivingSqft + Bedrooms + FullBaths, data = housing)
+summary(original)
+```
+```{r}
+one.way <- aov(housing$SalePrice ~ housing$LotSqft , data = price_lot)
+summary(one.way)
+
+two.way <- aov(housing$SalePrice ~ housing$LivingSqft + housing$Bedrooms + housing$FullBaths, data = price_sqft_bed_bath)
+summary(two.way)
+
+# Analysis of variance
+```
+
+
+```{r} 
+PriceLot <- lm(housing.SalePrice ~ housing.LotSqft, data = price_lot)
+PriceLot
+
+library(car)
+outlierTest(PriceLot)
+# Accessing Outliers
+```
+```{r}
+qqPlot(PriceLot, main="QQ Plot")
+leveragePlots(PriceLot)
+```
+```{r}
+PriceBLF <- (lm(housing.SalePrice ~ housing.Bedrooms + housing.LivingSqft + housing.FullBaths, data = price_sqft_bed_bath))
+PriceBLF
+
+library(car)
+outlierTest(PriceBLF)
+# Accessing Outliers
+```
+```{r}
+qqPlot(PriceBLF, main="QQ Plot")
+leveragePlots(PriceBLF)
+```
+
+
+```{r}
+summary(PriceLot)
+StandardRes <- rstandard(PriceLot)
+
+plot(StandardRes)
+hist(StandardRes)
+# standardized residuals
+```
+
+```{r}
+summary(PriceBLF)
+Standard_Res <- rstandard(PriceBLF)
+
+plot(Standard_Res)
+hist(Standard_Res)
+# standardized residuals
+```
+
+```{r}
+summary(PriceBLF$residuals)
+summary(PriceLot$residuals)
+# Pull out residuals
+```
+
+```{r}
+summary(PriceBLF)
+summary(PriceLot)
+
+leverage_1 <- as.data.frame(hatvalues(PriceBLF))
+leverage_1
+plot(hatvalues(PriceBLF), type = 'h')
+
+
+leverage_2 <- as.data.frame(hatvalues(PriceLot))
+leverage_2
+plot(hatvalues(PriceLot), type = 'h')
+
+# Calculate leverage
+```
+
+```{r}
+cooks_d <- cooks.distance(PriceBLF)
+cooks_d
+
+n <- nrow(outlierTest(PriceBLF))
+plot(cooks_d, main = "Cooks Distance for Influential Obs")
+abline(h = 4/n, lty = 2, col = "steelblue")
+
+# Cooks Distance
+
+```
+```{r}
+cooks_d2 <- cooks.distance(PriceLot)
+cooks_d2
+
+n <- nrow(outlierTest(PriceLot)) 
+plot(cooks_d2, main = "Cooks Distance for Influential Obs")
+abline(h = 4/n, lty = 2, col = "steelblue")
+
+# Cooks Distance
+```
+
+```{r}
+cov(price_lot)
+cov(price_sqft_bed_bath)
+
+# Covariance
+```
+
+
+
+
+
+
+
+
+
+
